@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/quests/quest-index.css' %}"/>
+{% endblock %} 
+{% block content %}
+
+<section class="page-header">
+  <h1>Cat List</h1>
+  <img src="" alt="A quest in a Waterdeep" />
+  <img src="" alt="A quest in a Dagger Ford" />
+  <img src="" alt="A quest in a Neverwinter" />
+  <img src="" alt="A quest in a Icewind Dale" />
+</section>
+
+<section class="card-container">
+  {% for quest in quests %}
+    <div class="card">
+      <div class="card-content">
+        <div class="card-img-container">
+          <img
+            src=""
+            alt="Quest Icon"
+          />
+        </div>
+        <h2 class="card-title">{{ quest.title }}</h2>
+        <p>In {{ quest.region }} {{ quest.description }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
+{% endblock %}
