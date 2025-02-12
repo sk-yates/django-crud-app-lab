@@ -3,7 +3,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-    return HttpResponse('<h1> Hello DMs </h1>')
+    return render(request, 'home.html')
 
 def about(request):
     return render(request, 'about.html')
@@ -11,7 +11,7 @@ def about(request):
 def quest_index(request):
     return render(request, 'quests/index.html', {'quests': sample_quests})
 
-class Quest:
+class Sample_quest:
     def __init__(self, title, region, description):
         self.title = title
         self.region = region
@@ -19,9 +19,9 @@ class Quest:
         self.is_complete = False
 
 sample_quests = [
-    Quest('Sleepless Knights', 'Waterdeep', 'The knights of Waterdeep have haunted dreams!'),
-    Quest('The Bloody Well', 'Dagger Ford', 'The drinking water of the town has been contaminated!'),
-    Quest('The Grateful Gurdy Player ', 'Neverwinter', 'The hurdy gurdy player has a quest for you, adventurers!'),
-    Quest('The Wailing Shack', 'Icewind Dale', 'The local Whaler is being haunter by a Banshee!')
+    Sample_quest('Sleepless Knights', 'Waterdeep', 'The knights of Waterdeep have haunted dreams!'),
+    Sample_quest('The Bloody Well', 'Dagger Ford', 'The drinking water of the town has been contaminated!'),
+    Sample_quest('The Grateful Gurdy Player ', 'Neverwinter', 'The hurdy gurdy player has a quest for you, adventurers!'),
+    Sample_quest('The Wailing Shack', 'Icewind Dale', 'The local Whaler is being haunter by a Banshee!')
 ]
 
