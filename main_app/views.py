@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .models import Quest
 # Create your views here.
 
 def home(request):
@@ -25,3 +27,23 @@ sample_quests = [
     Sample_quest('The Wailing Shack', 'Icewind Dale', 'The local Whaler is being haunter by a Banshee!')
 ]
 
+def quest_index(request):
+    quests = Quest.objects.all()
+    return render(request, 'quests/index.html', {'quests': quests})
+
+def quest_detail(request, quest_id):
+    quest = Quest.objects.get(id=quest_id)
+    return render(request, 'quests/detail.html', {'quest': quest})
+
+class QuestCreate(CreateView):
+    model = Quest
+    fields = ['title', 'region', 'description']
+    success_url = '/quests/'
+
+class QuestUpdate(UpdateView):
+    model = Quest
+    fields = ['title', 'region', 'description']
+
+class QuestDelete(DeleteView):
+    model = Quest
+    success_url = '/quests/'

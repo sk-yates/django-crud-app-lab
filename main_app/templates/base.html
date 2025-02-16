@@ -21,8 +21,13 @@
       </div>
       <nav>
         <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/quests">Quest Vault</a></li>
+            
+            <li><a href="{% url 'quest-index' %}">All Quests</a></li>
+
+            <li><a href="{% url 'quest-create' %}">Add a Quest</a></li>
+
+            <li><a href="{% url 'about' %}">About</a></li>
+
         </ul>
       </nav>
     </header>

@@ -1,8 +1,8 @@
-{% extends 'base.html' %} 
-{% load static %} 
+{% extends 'base.html' %}
+{% load static %}
 {% block head %}
-<link rel="stylesheet" href="{% static 'css/quests/quest-index.css' %}"/>
-{% endblock %} 
+<link rel="stylesheet" href="{% static 'css/quests/quest-index.css' %}" />
+{% endblock %}
 {% block content %}
 
 <section class="page-header">
@@ -15,18 +15,17 @@
 
 <section class="card-container">
   {% for quest in quests %}
-    <div class="card">
+  <div class="card">
+    <a href="{% url 'quest-detail' quest.id %}">
       <div class="card-content">
         <div class="card-img-container">
-          <img
-            src=""
-            alt="Quest Icon"
-          />
+          <img src="" alt="Quest Icon" />
         </div>
         <h2 class="card-title">{{ quest.title }}</h2>
         <p>In {{ quest.region }} {{ quest.description }}</p>
       </div>
-    </div>
+    </a>
+  </div>
   {% endfor %}
 </section>
 

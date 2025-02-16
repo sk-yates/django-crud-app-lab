@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -11,3 +12,6 @@ class Quest(models.Model):
     # new code below
     def __str__(self):
         return self.title
+    
+    def get_absolute_url(self):
+        return reverse('quest-detail', kwargs={'quest_id': self.id})
