@@ -113,5 +113,8 @@ class Location(models.Model):
         valid_choices = [choice[0] for choice in LOCALS]  # Extract valid keys
         if self.location_type not in valid_choices:
             raise ValidationError({'settlement_type': 'Invalid settlement type.'})
+    
+    def get_absolute_url(self):
+        return reverse('location_detail', kwargs={'pk': self.id})
 
 

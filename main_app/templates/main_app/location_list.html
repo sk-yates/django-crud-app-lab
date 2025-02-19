@@ -1,0 +1,31 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/toys/toy-index.css' %}" />
+{% endblock %} 
+{% block content %}
+
+<section class="page-header">
+  <h1>All Locations</h1>
+  <img src="" alt="alt text for image" />
+  <img src="" alt="alt text for image" />
+  <img src="" alt="alt text for image" />
+  <img src="" alt="alt text for image" />
+</section>
+
+<section class="card-container">
+  {% for location in location_list %}
+    <div class="card" style="border-color: {{ toy.color }}">
+      <div class="card-bg" style="background-color: {{ toy.color }}"></div>
+      <a href="{% url 'location-detail' location.id %}">
+        <div class="card-content">
+          <h2> {{ location.name }} </h2>
+          <h3> {{ location.get_location_type_display }} </h3>
+          <p> {{ location.description }} </p>
+        </div>
+      </a>
+    </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

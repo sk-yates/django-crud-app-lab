@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Quest
+from django.views.generic import ListView, DetailView
+from .models import Quest, Location
 from .forms import SessionForm
 
 def home(request):
@@ -57,3 +58,21 @@ def add_session(request, quest_id):
         new_session.quest_id = quest_id
         new_session.save()
     return redirect('quest-detail', quest_id=quest_id)
+
+class LocationCreate(CreateView):
+    model = Location
+    fields = '__all__'
+
+class LocationList(ListView):
+    model = Location
+
+class LocationDetail(DetailView):
+    model = Location
+
+class LocationUpdate(UpdateView):
+    model = Location
+    fields = ['name', 'color']
+
+class LocationDelete(DeleteView):
+    model = Location
+    success_url = '/toys/'
