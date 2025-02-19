@@ -22,11 +22,19 @@
 <div class="feedings-toy-container">
   <section class="feedings">
     <div class="subsection-title">
-      <h2>Feedings</h2>
-      <img src="{% static 'images/>' %}" alt="" />
-      <img src="{% static 'images/>' %}" alt="" />
-      <img src="{% static 'images/>' %}" alt="" />
+      <h2>Sessions</h2>
+      <img src="" alt="" />
+      <img src="" alt="" />
+      <img src="" alt="" />
     </div>
+    <h3>Add a session</h3>
+    <form action="{% url 'add-session' quest.id %}" method="post" class="subsection-content" autocomplete="off">
+      {% csrf_token %}
+      {{ session_form.as_p }}
+      <button type="submit" class="btn submit">Add Session</button>
+    </form>
+    <h3>Past Feedings</h3>
+    {% if quest.session_set.all.count %}
     <table>
       <thead>
         <tr>
@@ -43,6 +51,11 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+    <div class="subsection-content">
+      <p>⚠️ {{quest.title}} has no sessions scheduled!</p>
+    </div>
+    {% endif %}
   </section>
 </div>
 

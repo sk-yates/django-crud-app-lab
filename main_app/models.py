@@ -92,6 +92,9 @@ class Session(models.Model):
 
     def __str__(self):
         return f"{self.get_session_type_display()} on {self.date}"
+    
+    class Meta:
+        ordering = ['-date']
 
 class Location(models.Model):
     name = models.CharField(max_length=100)

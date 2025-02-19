@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Quest
-# Create your views here.
+from .forms import SessionForm
 
 def home(request):
     return render(request, 'home.html')
@@ -33,7 +33,8 @@ def quest_index(request):
 
 def quest_detail(request, quest_id):
     quest = Quest.objects.get(id=quest_id)
-    return render(request, 'quests/detail.html', {'quest': quest})
+    session_form = SessionForm()
+    return render(request, 'quests/detail.html', {'quest': quest, 'session_form': session_form})
 
 class QuestCreate(CreateView):
     model = Quest
@@ -47,3 +48,12 @@ class QuestUpdate(UpdateView):
 class QuestDelete(DeleteView):
     model = Quest
     success_url = '/quests/'
+
+
+def add_session(request, quest_id):
+    form = SessionForm(request.POST)
+    if form.is_valid():
+        new_session = form.save(commit=False)
+        new_session.quest_id = quest_id
+        new_session.save()
+    return redirect('quest-detail', quest_id=quest_id)

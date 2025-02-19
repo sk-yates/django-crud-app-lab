@@ -10,5 +10,7 @@ urlpatterns = [
     path('quests/create', views.QuestCreate.as_view(), name='quest-create'),
     path('quests/<int:pk>/update/', views.QuestUpdate.as_view(), name='quest-update'),
     path('quests/<int:pk>/delete/', views.QuestDelete.as_view(), name='quest-delete'),
+    path('quests/<int:quest_id>/add-session', views.add_session, name='add-session'),
+
 ]
 
