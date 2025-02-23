@@ -28,7 +28,7 @@ SESSION_TYPES = (
     ('19', 'Divine Trial'),
 )
 
-LOCALS = (
+LOCALES = (
     ('0', 'a Village'),
     ('1', 'a Castle'),
     ('2', 'a Hamlet'),
@@ -64,12 +64,31 @@ LOCALS = (
     ('32', 'Catacombs'),  # No article needed for plural
 )
 
+class Location(models.Model):
+    name = models.CharField(max_length=100)
+    population = models.IntegerField(validators=[MaxValueValidator(1000)])
+    location_type = models.CharField(max_length = 2, choices = LOCALES, default = LOCALES[0][0])
+    description = models.TextField(max_length=500)
+    is_visited = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.name} is {self.get_location_type_display()} with {self.population} souls residing there."
+
+    def clean(self):
+        # Ensure location_type is a valid choice
+        valid_choices = [choice[0] for choice in LOCALES]  # Extract valid keys
+        if self.location_type not in valid_choices:
+            raise ValidationError({'settlement_type': 'Invalid settlement type.'})
+    
+    def get_absolute_url(self):
+        return reverse('location-detail', kwargs={'pk': self.id})
 
 class Quest(models.Model):
     title = models.CharField(max_length=100)
     region = models.CharField(max_length=100)
     description = models.TextField(max_length=300)
     is_complete = models.BooleanField(default=False)
+    locations = models.ManyToManyField(Location)
 
     # new code below
     def __str__(self):
@@ -95,26 +114,3 @@ class Session(models.Model):
     
     class Meta:
         ordering = ['-date']
-
-class Location(models.Model):
-    name = models.CharField(max_length=100)
-    population = models.IntegerField(validators=[MaxValueValidator(1000)])
-    location_type = models.CharField(max_length = 2, choices = LOCALS, default = LOCALS[0][0])
-    description = models.TextField(max_length=500)
-    is_visited = models.BooleanField(default=False)
-
-    quest = models.ForeignKey(Quest, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.name} is {self.get_location_type_display()} with {self.population} souls residing there."
-
-    def clean(self):
-        # Ensure location_type is a valid choice
-        valid_choices = [choice[0] for choice in LOCALS]  # Extract valid keys
-        if self.location_type not in valid_choices:
-            raise ValidationError({'settlement_type': 'Invalid settlement type.'})
-    
-    def get_absolute_url(self):
-        return reverse('location_detail', kwargs={'pk': self.id})
-
-

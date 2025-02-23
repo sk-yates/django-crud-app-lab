@@ -34,8 +34,10 @@ def quest_index(request):
 
 def quest_detail(request, quest_id):
     quest = Quest.objects.get(id=quest_id)
+    # locations = Location.objects.all()
+    locations_available = Location.objects.exclude(id__in = quest.locations.all().values_list('id'))
     session_form = SessionForm()
-    return render(request, 'quests/detail.html', {'quest': quest, 'session_form': session_form})
+    return render(request, 'quests/detail.html', {'quest': quest, 'session_form': session_form, 'locations': locations_available})
 
 class QuestCreate(CreateView):
     model = Quest
@@ -75,4 +77,13 @@ class LocationUpdate(UpdateView):
 
 class LocationDelete(DeleteView):
     model = Location
-    success_url = '/toys/'
+    success_url = '/quests/'
+
+def associate_location(request, quest_id, location_id):
+    Quest.objects.get(id=quest_id).locations.add(location_id)
+    return redirect('quest-detail', quest_id=quest_id)
+
+def remove_location(request, quest_id, location_id):
+    quest, location = Quest.objects.get(id=quest_id), Location.objects.get(id=location_id)
+    quest.locations.remove(location)
+    return redirect('quest-detail', quest_id=quest_id)

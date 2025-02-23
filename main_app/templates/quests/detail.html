@@ -61,4 +61,51 @@
   </section>
 </div>
 
+<section class="toys">
+  <div class="subsection-title">
+    <h2>Locations</h2>
+    <img src="" alt="A compass" />
+  </div>
+
+  <h3>{{ quest.title }} Locations</h3>
+  <div class="subsection-content">
+    {% if quest.locations.count %} 
+      {% for location in quest.locations.all %}
+        <div class="toy-container">
+          <div class="color-block" style="background-color: grey"></div>
+          <a href="{% url 'location-detail' location.id %}">
+            <p> {{ location.name }}</p>
+          </a>
+          <form action="{% url 'remove-location' quest.id location.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Remove Location</button>
+          </form>
+        </div>
+      {% endfor %} 
+    {% else %}
+      <p class="no-toys">{{quest.title}} has no associated locations!</p>
+    {% endif %}
+  </div>
+
+  <h3>Available Locations</h3>
+  <div class="subsection-content">
+    {% if locations.count %} 
+      {% for location in locations.all %}
+        <div class="toy-container">
+          <div class="color-block" style="background-color: {{ toy.color }}"></div>
+          <a href="{% url 'location-detail' location.id %}">
+            <p> {{ location.name }} </p>
+          </a>
+          <form action="{% url 'associate-location' quest.id location.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn submit">Give toy</button>
+          </form>
+        </div>
+      {% endfor %} 
+    {% else %}
+      <p class="all-toys">{{quest.title}} has all available locations </p>
+    {% endif %}
+  </div>
+</section>
+
 {% endblock %}
