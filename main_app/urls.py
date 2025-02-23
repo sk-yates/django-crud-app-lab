@@ -1,9 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from . import views # Import views to connect routes to view functions
 
 urlpatterns = [
     # Routes will be added here
-    path('', views.home, name='home'),
+    path('', views.Home.as_view(), name='home'),
     path('about/', views.about, name='about'),
     path('quests/', views.quest_index, name='quest-index'),
     path('quests/<int:quest_id>/', views.quest_detail, name='quest-detail'),
@@ -18,5 +18,7 @@ urlpatterns = [
     path('locations/<int:pk>/delete/', views.LocationDelete.as_view(), name='location-delete'),
     path('quests/<int:quest_id>/associate-location/<int:location_id>/', views.associate_location, name='associate-location'),
     path('quests/<int:quest_id>/remove-location/<int:location_id>/', views.remove_location, name='remove-location'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/signup/', views.signup, name='signup'),
 ]
 

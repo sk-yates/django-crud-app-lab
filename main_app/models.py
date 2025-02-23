@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django.core.validators import MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -89,6 +90,7 @@ class Quest(models.Model):
     description = models.TextField(max_length=300)
     is_complete = models.BooleanField(default=False)
     locations = models.ManyToManyField(Location)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # new code below
     def __str__(self):
