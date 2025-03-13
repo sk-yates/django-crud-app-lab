@@ -4,7 +4,8 @@ from django.core.validators import MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-# Create your models here.
+
+# +++++++++++++++++++++ Choice Tuples +++++++++++++++++++++
 
 SESSION_TYPES = (
     ('0', 'Dungeon Crawl'),
@@ -39,7 +40,7 @@ LOCALES = (
     ('6', 'a Keep'),
     ('7', 'a Citadel'),
     ('8', 'a Tower'),
-    ('9', 'Ruins'),  # No article needed for plural
+    ('9', 'Ruins'),
     ('10', 'a Monastery'),
     ('11', 'a Temple'),
     ('12', 'a Sanctuary'),
@@ -62,8 +63,66 @@ LOCALES = (
     ('29', 'an Isle'),
     ('30', 'an Archipelago'),
     ('31', 'a Crypt'),
-    ('32', 'Catacombs'),  # No article needed for plural
+    ('32', 'Catacombs'),
 )
+
+NPC_TYPES = (
+    ('0', 'Innkeeper'),
+    ('1', 'Merchant'),
+    ('2', 'Blacksmith'),
+    ('3', 'Guard'),
+    ('4', 'Noble'),
+    ('5', 'Peasant'),
+    ('6', 'Bounty Hunter'),
+    ('7', 'Bandit'),
+    ('8', 'Alchemist'),
+    ('9', 'Healer'),
+    ('10', 'Priest'),
+    ('11', 'Cultist'),
+    ('12', 'Wizard'),
+    ('13', 'Sorcerer'),
+    ('14', 'Druid'),
+    ('15', 'Bard'),
+    ('16', 'Rogue'),
+    ('17', 'Ranger'),
+    ('18', 'Knight'),
+    ('19', 'Paladin'),
+    ('20', 'Warlock'),
+    ('21', 'Necromancer'),
+    ('22', 'Scholar'),
+    ('23', 'Sailor'),
+    ('24', 'Pirate'),
+    ('25', 'Hunter'),
+    ('26', 'Farmer'),
+    ('27', 'Fisherman'),
+    ('28', 'Stablemaster'),
+    ('29', 'Mayor'),
+    ('30', 'King'),
+    ('31', 'Queen'),
+    ('32', 'Prince'),
+    ('33', 'Princess'),
+    ('34', 'General'),
+    ('35', 'Captain'),
+    ('36', 'Spy'),
+    ('37', 'Beggar'),
+    ('38', 'Minstrel'),
+    ('39', 'Hermit'),
+    ('40', 'Gladiator'),
+    ('41', 'Executioner'),
+    ('42', 'Gravekeeper'),
+    ('43', 'Smuggler'),
+    ('44', 'Assassin'),
+    ('45', 'Seer'),
+    ('46', 'Chieftain'),
+    ('47', 'Beastmaster'),
+    ('48', 'Tavern Wench'),
+    ('49', 'Messenger'),
+)
+
+
+
+
+# +++++++++++++++++++++ Models +++++++++++++++++++++
 
 class Location(models.Model):
     name = models.CharField(max_length=100)
@@ -98,7 +157,29 @@ class Quest(models.Model):
     
     def get_absolute_url(self):
         return reverse('quest-detail', kwargs={'quest_id': self.id})
+
+
+class NPC(models.Model):
+    name = models.CharField(max_length=100)
+    hitpoints = models.IntegerField(validators=[MaxValueValidator(500)])
+    armor_class = models.IntegerField(validators=[MaxValueValidator(20)])
+    backstory = models.TextField(max_length=500)
+    npc_type = models.CharField(max_length=2, choices=NPC_TYPES, default=NPC_TYPES[0][0])
+    is_alive = models.BooleanField(default=True)
     
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.get_npc_type_display()} named {self.name} with {self.hitpoints} hitpoints and {self.armor_class} armor class."
+    
+    def clean(self):
+        # Ensure location_type is a valid choice
+        valid_choices = [choice[0] for choice in NPC_TYPES]  # Extract valid keys
+        if self.npc_type not in valid_choices:
+            raise ValidationError({'npc_type': 'Invalid npc type.'})
+
+
+
 class Session(models.Model):
     date = models.DateField()
     session_type = models.CharField(
@@ -113,6 +194,12 @@ class Session(models.Model):
 
     def __str__(self):
         return f"{self.get_session_type_display()} on {self.date}"
+    
+    def clean(self):
+        # Ensure location_type is a valid choice
+        valid_choices = [choice[0] for choice in SESSION_TYPES]  # Extract valid keys
+        if self.session_type not in valid_choices:
+            raise ValidationError({'session_type': 'Invalid session type.'})
     
     class Meta:
         ordering = ['-date']
